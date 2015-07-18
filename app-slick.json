@@ -1,0 +1,33 @@
+{
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "edvorkin/slick-swagger:1",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "containerPort": 8080, "hostPort": 31000, "servicePort": 9000, "protocol": "tcp" }
+	
+      ]
+    }
+  },
+  "cmd": "java -jar /tmp/spray-slick-swagger-assembly-0.0.2.jar Boot",
+  "id": "slick-swagger-demo",
+  "instances": 1,
+  "cpus": 0.1,
+  "mem": 256,
+  "constraints": [
+    ["hostname", "UNIQUE"]
+  ],
+  "ports":[8080],
+  "healthChecks": [
+      {
+        "protocol": "HTTP",
+        "portIndex": 0,
+        "path": "/",
+        "gracePeriodSeconds": 5,
+        "intervalSeconds": 20,
+        "maxConsecutiveFailures": 3
+      }
+
+    ]
+}

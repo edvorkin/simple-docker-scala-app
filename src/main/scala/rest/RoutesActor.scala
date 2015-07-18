@@ -46,15 +46,16 @@ class RoutesActor(modules: Configuration with PersistenceModule) extends Actor w
   }
 
 
-  def receive = runRoute( suppliers.SupplierPostRoute ~ suppliers.SupplierGetRoute ~ swaggerService.routes ~
+  def receive = runRoute( suppliers.SupplierPostRoute ~ suppliers.SupplierGetRoute ~ swaggerService.routes ~ suppliers.HealthCheck ~
     get {
       pathPrefix("") { pathEndOrSingleSlash {
         getFromResource("swagger-ui/index.html")
       }
       } ~
         getFromResourceDirectory("swagger-ui")
-    })
+    } )
 }
+
 
 
 
@@ -72,7 +73,7 @@ abstract class SupplierHttpService(modules: Configuration with PersistenceModule
   ))
   @ApiResponses(Array(
     new ApiResponse(code = 200, message = "Ok")))
-  def SupplierGetRoute = path("supplier" / IntNumber) { (supId)      =>
+  def SupplierGetRoute = path("service_spray" / "supplier" / IntNumber) { (supId)      =>
     get {
       respondWithMediaType(`application/json`) {
         onComplete((modules.suppliersDal.getSupplierById(supId)).mapTo[Vector[Supplier]]) {
@@ -90,7 +91,7 @@ abstract class SupplierHttpService(modules: Configuration with PersistenceModule
     new ApiResponse(code = 400, message = "Bad Request"),
     new ApiResponse(code = 201, message = "Entity Created")
   ))
-  def SupplierPostRoute = path("supplier"){
+  def SupplierPostRoute = path("service_spray" / "supplier"){
     post {
       entity(as[SimpleSupplier]){ supplierToInsert =>  onComplete((modules.suppliersDal.save(Supplier(None,supplierToInsert.name,supplierToInsert.desc)))) {
         // ignoring the number of insertedEntities because in this case it should always be one, you might check this in other cases
@@ -100,4 +101,17 @@ abstract class SupplierHttpService(modules: Configuration with PersistenceModule
       }
     }
   }
+  def HealthCheck = path("service_spray" / "health" ) {
+    get {
+      respondWithMediaType(`application/json`) {
+        complete {
+          <html>
+            <body>
+              <h1>Say hello to <i>spray-routing</i> on <i>spray-can</i>!</h1>
+            </body>
+          </html>
+        }
+        }
+      }
+    }
 }

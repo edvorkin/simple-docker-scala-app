@@ -25,7 +25,7 @@ class RoutesSpec  extends AbstractRestTest {
     "return an empty array of suppliers" in {
      modules.suppliersDal.getSupplierById(1) returns Future(Vector())
 
-      Get("/supplier/1") ~> suppliers.SupplierGetRoute ~> check {
+      Get("/service_spray/supplier/1") ~> suppliers.SupplierGetRoute ~> check {
         handled must beTrue
         status mustEqual OK
         responseAs[Seq[Supplier]].length == 0
@@ -34,7 +34,7 @@ class RoutesSpec  extends AbstractRestTest {
 
     "return an array with 2 suppliers" in {
       modules.suppliersDal.getSupplierById(1) returns Future(Vector(Supplier(Some(1),"name 1", "desc 1"),Supplier(Some(2),"name 2", "desc 2")))
-      Get("/supplier/1") ~> suppliers.SupplierGetRoute ~> check {
+      Get("/service_spray/supplier/1") ~> suppliers.SupplierGetRoute ~> check {
         handled must beTrue
         status mustEqual OK
         responseAs[Seq[Supplier]].length == 2
@@ -43,20 +43,20 @@ class RoutesSpec  extends AbstractRestTest {
 
     "create a supplier with the json in post" in {
       modules.suppliersDal.save(Supplier(None,"name 1","desc 1")) returns  Future(1)
-      Post("/supplier",SimpleSupplier("name 1","desc 1")) ~> suppliers.SupplierPostRoute ~> check {
+      Post("/service_spray/supplier",SimpleSupplier("name 1","desc 1")) ~> suppliers.SupplierPostRoute ~> check {
         handled must beTrue
         status mustEqual Created
       }
     }
 
     "not handle the invalid json" in {
-      Post("/supplier","{\"name\":\"1\"}") ~> suppliers.SupplierPostRoute ~> check {
+      Post("/service_spray/supplier","{\"name\":\"1\"}") ~> suppliers.SupplierPostRoute ~> check {
         handled must beFalse
       }
     }
 
     "not handle an empty post" in {
-      Post("/supplier") ~> suppliers.SupplierPostRoute ~> check {
+      Post("/service_spray/supplier") ~> suppliers.SupplierPostRoute ~> check {
         handled must beFalse
       }
     }

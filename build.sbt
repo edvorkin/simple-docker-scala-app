@@ -5,6 +5,8 @@ scalaVersion  := "2.11.6"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
+
+
 libraryDependencies ++= {
   val akkaV = "2.3.9"
   val sprayV = "1.3.3"
@@ -29,4 +31,20 @@ libraryDependencies ++= {
     "com.zaxxer" % "HikariCP-java6" % "2.3.6",
     "com.gettyimages" %% "spray-swagger" % "0.5.1"
   )
+
+
+
+
+
+}
+mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
+{
+  case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+  case PathList("org","slf4j", xs @ _*)         => MergeStrategy.first
+  case PathList("org","mockito", xs @ _*)         => MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+  case "application.conf" => MergeStrategy.concat
+  case "unwanted.txt"     => MergeStrategy.discard
+  case x => old(x)
+}
 }
