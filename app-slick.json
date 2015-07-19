@@ -2,7 +2,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "edvorkin/slick-swagger:1",
+      "image": "edvorkin/simple-docker-scala-app",
       "network": "BRIDGE",
       "portMappings": [
         { "containerPort": 8080, "hostPort": 31000, "servicePort": 9000, "protocol": "tcp" }
@@ -10,8 +10,8 @@
       ]
     }
   },
-  "cmd": "java -jar /tmp/spray-slick-swagger-assembly-0.0.2.jar Boot",
-  "id": "slick-swagger-demo",
+  "cmd": "java -jar /tmp/simple-docker-scala-app-assembly-0.0.2.jar Boot",
+  "id": "simple-docker-scala-app",
   "instances": 1,
   "cpus": 0.1,
   "mem": 256,
