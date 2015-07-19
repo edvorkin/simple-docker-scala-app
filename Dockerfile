@@ -1,5 +1,5 @@
 # maintainer: Eugene Dvorkin (@edvorkin)
-FROM ubuntu:14.04
+FROM ubuntu:14.10
 sudo apt-get update
 RUN sudo apt-get install openjdk-8-jre
 #the fat jar assembly aready build outside of container
